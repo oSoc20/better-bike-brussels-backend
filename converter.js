@@ -6,6 +6,10 @@ const xlsx = require('node-xlsx');
 const GeoJSON = require('geojson');
 
 const axios = require('axios');
+const fs = require('fs');
+
+
+
 
 class GeoJSONConverter {
 
@@ -109,6 +113,21 @@ class VilloJSONConverter {
 
 }
 
+class JSONWriter {
+
+    write(object, path) {
+        let as_string = JSON.stringify(object);
+        fs.writeFileSync(path, as_string);
+    }
+}
+
+
+class BatchConvert {
+
+    work() {
+
+    }
+}
 
 
 
@@ -119,7 +138,7 @@ let villo_url = "https://api.jcdecaux.com/vls/v1/stations?apiKey=6d5071ed0d0b3b6
 let out = new VilloJSONConverter(villo_url);
 
 let a = out.convert().then(
-    (e) => console.log(e)
+    (e) => new JSONWriter().write(e, "./test.json")
 );
 
 console.log("Done.")
