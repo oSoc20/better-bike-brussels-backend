@@ -5,13 +5,21 @@ const geojson = require('geojson');
 const cache = require('../scripts/cache');
 
 router.get("/bicycle-parking", (req, res) => bicycleParking(req, res));
-router.get("/villo-stations", (req, res) => villo(req, res));
+router.get("/villo-stations", (req, res) => villoStation(req, res));
+router.get("/air-pump", (req,res) => airPump(req,res));
+router.get("/bicycle-repair-station", (req,res) => bicycleRepairStation(req,res));
+router.get("/bicyle-shop", (req,res) => bicycleShop(req,res));
+router.get("/bicycle-rental", (req,res) => bicycleRental(req,res));
+
+
+router.get("/map-endpoints", (req,res)=>{})
+
 
 async function bicycleParking(req, res) {
   res.status(501).json({ error: "not implemented" });
 }
 
-async function villo(req, res) {
+async function villoStation(req, res) {
   let url =
     "https://api.jcdecaux.com/vls/v1/stations?apiKey=6d5071ed0d0b3b68462ad73df43fd9e5479b03d6&contract=Bruxelles-Capitale";
   let json = await fetch(url);
@@ -33,7 +41,28 @@ async function villo(req, res) {
   /*console.log(cache.get("testdata"));*/
 
   return res.status(200).json(data);
+} //TODO switch conversion to convert.js
+
+async function airPump(req,res){
+    res.status(501).json({ error: "not implemented" });
 }
+
+async function bicycleRepairStation(req,res){
+    res.status(501).json({ error: "not implemented" });
+}
+
+async function bicycleShop(req,res){
+    res.status(501).json({ error: "not implemented" });
+}
+
+async function bicycleRental(req,res){
+    res.status(501).json({ error: "not implemented" });
+}
+
+
+
+
+
 
 function fetch(url) {
   return axios.get(url);
