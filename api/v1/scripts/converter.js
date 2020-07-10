@@ -3,6 +3,7 @@ const https = require("https");
 
 const xlsx = require("node-xlsx");
 const GeoJSON = require("geojson");
+const osmToGeoJson = require("osmtogeojson");
 
 const axios = require("axios");
 const fs = require("fs");
@@ -65,6 +66,10 @@ module.exports = class converter {
         Point: ["lat", "lng"],
         include: ["name", "bike_stands"],
       });
+  }
+
+  osmToGeoJson(){
+    return osmToGeoJson(this.data);
   }
 };
 
