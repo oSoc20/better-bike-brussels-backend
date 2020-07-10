@@ -1,6 +1,25 @@
 {
-  "name": "BetterBikeBrusselsBackend",
+  "name": "betterbikebrusselsbackend",
   "version": "1.0.0",
+  "description": "server for the betterbikebrussels application",
+  "main": "app.js",
+  "scripts": {
+    "start":"node .",
+    "dev": "nodemon ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oSoc20/better-bike-brussels-backend.git"
+  },
+  "keywords": [
+    "betterbike"
+  ],
+  "author": "Wout Verbiest",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oSoc20/better-bike-brussels-backend/issues"
+  },
+  "homepage": "https://github.com/oSoc20/better-bike-brussels-backend#readme",
   "dependencies": {
     "qs": "^6.9.4"
   },
