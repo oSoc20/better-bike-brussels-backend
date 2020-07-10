@@ -12,6 +12,7 @@ router.get("/bicycle-repair-station", (req, res) =>
 );
 router.get("/bicycle-shop", (req, res) => bicycleShop(req, res));
 router.get("/bicycle-rental", (req, res) => bicycleRental(req, res));
+router.get("/drinking-water", (req, res) => drinkingWater(req, res));
 
 router.get("/endpoints", (req, res) => getMapEndpoints(req, res));
 
@@ -79,6 +80,29 @@ async function bicycleRental(req, res) {
   res.status(501).json({ error: "not implemented" });
 }
 
+async function drinkingWater(req,res){
+  let key = "drinking_water";
+  let osmfilter = "node[amenity=drinking_water]";
+
+  if (cache.get(key)) {
+    return res.status(200).json(cache.get(key));
+  }
+
+  try {
+    var json = await fetch(osmUrl(osmfilter));
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "internal server error" });
+  }
+
+  let converter = new Converter(json.data);
+  let data = converter.osmToGeoJson();
+
+  cache.add(key, data); //TODO add timeout?
+
+  return res.status(200).json(data);
+}
+
 async function getMapEndpoints(req, res) {
   let endpoints = router.stack.map((x) => "/api/v1/map" + x.route.path);
   res
@@ -95,5 +119,7 @@ function osmUrl(filter) {
   let url = `https://overpass-api.de/api/interpreter?data=[out:json][timeout:25]${bbox};(${filter};);out body;>;out skel qt;`;
   return url;
 }
+
+
 
 module.exports = router;
