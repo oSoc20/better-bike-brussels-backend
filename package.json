@@ -15,7 +15,7 @@
     "betterbike"
   ],
   "author": "Wout Verbiest",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/oSoc20/better-bike-brussels-backend/issues"
   },
