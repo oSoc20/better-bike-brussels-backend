@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 const geojson = require('geojson');
+const cache = require('../scripts/cache');
 
 router.get("/bicycle-parking", (req, res) => bicycleParking(req, res));
 router.get("/villo-stations", (req, res) => villo(req, res));
@@ -27,6 +28,9 @@ async function villo(req, res) {
   }
 
   let data = await geojson.parse(villo_stations, {Point: ['lat', 'lng'], include: ['name', 'bike_stands']});
+
+  cache.add("testdata", data);
+  /*console.log(cache.get("testdata"));*/
 
   return res.status(200).json(data);
 }
