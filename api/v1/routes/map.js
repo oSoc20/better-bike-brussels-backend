@@ -18,8 +18,11 @@ async function bicycleParking(req, res) {
 }
 
 async function villoStation(req, res) {
-  let url =
-    "https://api.jcdecaux.com/vls/v1/stations?apiKey=6d5071ed0d0b3b68462ad73df43fd9e5479b03d6&contract=Bruxelles-Capitale";
+  if(cache.get("villo")){
+    return res.status(200).json(cache.get("villo"));
+  }
+
+  let url = "https://api.jcdecaux.com/vls/v1/stations?apiKey=6d5071ed0d0b3b68462ad73df43fd9e5479b03d6&contract=Bruxelles-Capitale";
   let json = await fetch(url);
 
   var villo_stations = [];
@@ -38,7 +41,7 @@ async function villoStation(req, res) {
     include: ["name", "bike_stands"],
   });
 
-  cache.add("villo", data); //TODO DO SOMETHING WITH THIS CACHE
+  cache.add("villo", data); //TODO add timeout?
 
   return res.status(200).json(data);
 } //TODO switch conversion to convert.js
