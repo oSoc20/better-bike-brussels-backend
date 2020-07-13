@@ -3,6 +3,7 @@ const router = express.Router();
 const axios = require("axios");
 const cache = require("../scripts/cache");
 const Converter = require("../scripts/converter");
+const GeoFilter = require("../scripts/filtering");
 
 router.get("/bicycle-parking", (req, res) => bicycleParking(req, res));
 router.get("/villo-stations", (req, res) => villoStation(req, res));
@@ -42,6 +43,8 @@ async function bicycleParking(req, res) {
 async function villoStation(req, res) {
   let key = "villo_station";
 
+  console.log(req.query.lat + " " + req.query.lng + " " + req.query.radius + " " + req.query.max_answers);
+
   if (cache.get(key)) {
     return res.status(200).json(cache.get(key));
   }
@@ -61,7 +64,19 @@ async function villoStation(req, res) {
 
   cache.add(key, data); //TODO add timeout?
 
-  return res.status(200).json(data);
+  // Filter relevant data
+
+  let filter = new GeoFilter(data)
+
+  let filtered_data = filter.filter(
+      req.query.lat,
+      req.query.lng,
+      req.query.radius, //radius
+      req.query.max_answers
+  )
+
+
+  return res.status(200).json(filtered_data);
 }
 
 async function airPump(req, res) {
