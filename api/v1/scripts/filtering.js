@@ -15,7 +15,7 @@ module.exports = class GeoFilter {
      * @param max_answers
      * @returns {Promise<void>}
      */
-    async filter(center_latitude, center_longitude, radius, max_answers) {
+    filter(center_latitude, center_longitude, radius, max_answers) {
 
         console.log("Filtering...");
         let new_geojson;
@@ -25,9 +25,12 @@ module.exports = class GeoFilter {
                 let list = this.geoJson.features.map((item) => {
                     let sub_filter = new GeoFilter(item);
                     return sub_filter.filter(center_latitude, center_longitude, radius, max_answers);
-                }).filter((x) => {
-                        x != null
+                }).filter((item) => {
+                    return item !== null
                 });
+
+
+
 
                 new_geojson = {
                     type: 'FeatureCollection',
