@@ -1,12 +1,37 @@
 {
-  "name": "BetterBikeBrusselsBackend",
+  "name": "betterbikebrusselsbackend",
   "version": "1.0.0",
+  "description": "server for the betterbikebrussels application",
+  "main": "app.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oSoc20/better-bike-brussels-backend.git"
+  },
+  "keywords": [
+    "betterbike"
+  ],
+  "author": "Wout Verbiest",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/oSoc20/better-bike-brussels-backend/issues"
+  },
+  "homepage": "https://github.com/oSoc20/better-bike-brussels-backend#readme",
   "dependencies": {
-    "qs": "^6.9.4"
+    "axios": "^0.19.2",
+    "express": "^4.17.1",
+    "geojson": "^0.5.0",
+    "memory-cache": "^0.2.0",
+    "mysql2": "^2.1.0",
+    "osmtogeojson": "^3.0.0-beta.4",
+    "qs": "^6.9.4",
+    "sequelize": "^6.3.1"
   },
   "devDependencies": {
-    "axios": "^0.19.2",
-    "geojson": "^0.5.0",
-    "node-xlsx": "^0.15.0"
+    "node-xlsx": "^0.15.0",
+    "nodemon": "^2.0.4"
   }
 }
