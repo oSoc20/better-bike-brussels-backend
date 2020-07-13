@@ -17,7 +17,7 @@ module.exports = class GeoFilter {
      */
     filter(center_latitude, center_longitude, radius, max_answers) {
 
-        console.log("Filtering...");
+        //console.log("Filtering...");
         let new_geojson;
         switch (this.geoJson.type) {
             case "FeatureCollection":
@@ -28,9 +28,6 @@ module.exports = class GeoFilter {
                 }).filter((item) => {
                     return item !== null
                 });
-
-
-
 
                 new_geojson = {
                     type: 'FeatureCollection',
@@ -43,15 +40,21 @@ module.exports = class GeoFilter {
                     lon: center_longitude
                 }
                 let feature_pos = {
-                    lat: this.geoJson.geometry.coordinates[0],
-                    lon: this.geoJson.geometry.coordinates[1]
+                    lat: this.geoJson.geometry.coordinates[1],
+                    lon: this.geoJson.geometry.coordinates[0]
                 }
 
                 if (Distance.between(client_center, feature_pos) < Distance(radius + "m")) {
+                    
+                    this.geoJson.properties.dist = Distance.between(client_center, feature_pos).human_readable();
+                    this.geoJson.radians = Distance.between(client_center, feature_pos).radians;
+                    
                     new_geojson = this.geoJson
                 } else {
                     new_geojson = null;
                 }
+
+
                 break;
             default:
                 break;

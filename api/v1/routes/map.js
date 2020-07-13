@@ -4,6 +4,7 @@ const axios = require("axios");
 const cache = require("../scripts/cache");
 const Converter = require("../scripts/converter");
 const GeoFilter = require("../scripts/filtering");
+var sortJsonArray = require("sort-json-array");
 
 router.get("/bicycle-parking", (req, res) => bicycleParking(req, res));
 router.get("/villo-stations", (req, res) => villoStation(req, res));
@@ -43,10 +44,39 @@ async function bicycleParking(req, res) {
 async function villoStation(req, res) {
   let key = "villo_station";
 
-  console.log(req.query.lat + " " + req.query.lng + " " + req.query.radius + " " + req.query.max_answers);
+  console.log(
+    req.query.lat +
+      " " +
+      req.query.lng +
+      " " +
+      req.query.radius +
+      " " +
+      req.query.max_answers
+  );
 
   if (cache.get(key)) {
-    return res.status(200).json(cache.get(key));
+    let data = res.status(200).json(cache.get(key));
+
+    let filter = new GeoFilter(data);
+
+    let filtered_data = filter.filter(
+      req.query.lat,
+      req.query.lng,
+      req.query.radius, //radius
+      req.query.max_answers
+    );
+  
+    filtered_data.features = sortJsonArray(
+      filtered_data.features,
+      "radians",
+      "asc"
+    );
+  
+    if(filtered_data.features.length > req.query.max_answers){
+      filtered_data.features.length = req.query.max_answers;
+    }
+
+    return res.status(200).json(filtered_data);
   }
 
   let url =
@@ -62,19 +92,28 @@ async function villoStation(req, res) {
   let converter = new Converter(json.data);
   let data = converter.villoToGeoJson();
 
-  cache.add(key, data); //TODO add timeout?
+  //cache.add(key, data); //TODO add timeout?
 
   // Filter relevant data
 
-  let filter = new GeoFilter(data)
+  let filter = new GeoFilter(data);
 
   let filtered_data = filter.filter(
-      req.query.lat,
-      req.query.lng,
-      req.query.radius, //radius
-      req.query.max_answers
-  )
+    req.query.lat,
+    req.query.lng,
+    req.query.radius, //radius
+    req.query.max_answers
+  );
 
+  filtered_data.features = sortJsonArray(
+    filtered_data.features,
+    "radians",
+    "asc"
+  );
+    if(filtered_data.features.length > req.query.max_answers){
+      filtered_data.features.length = req.query.max_answers;
+    }
+  
 
   return res.status(200).json(filtered_data);
 }
@@ -95,7 +134,7 @@ async function bicycleRental(req, res) {
   res.status(501).json({ error: "not implemented" });
 }
 
-async function drinkingWater(req,res){
+async function drinkingWater(req, res) {
   let key = "drinking_water";
   let osmfilter = "node[amenity=drinking_water]";
 
@@ -134,7 +173,5 @@ function osmUrl(filter) {
   let url = `https://overpass-api.de/api/interpreter?data=[out:json][timeout:25]${bbox};(${filter};);out body;>;out skel qt;`;
   return url;
 }
-
-
 
 module.exports = router;
