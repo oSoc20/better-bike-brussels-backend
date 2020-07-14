@@ -302,6 +302,10 @@ function osmUrl(filter) {
 
 function validate(req) {
   if (
+    req.query.lat&&
+    req.query.lng&&
+    req.query.radius&&
+    req.query.max_answers&&
     !validator.isEmpty(req.query.lat) &&
     validator.isDecimal(req.query.lat) &&
     !validator.isEmpty(req.query.lng) &&
