@@ -32,7 +32,8 @@
     "osmtogeojson": "^3.0.0-beta.4",
     "qs": "^6.9.4",
     "sequelize": "^6.3.1",
-    "sort-json-array": "^0.1.7"
+    "sort-json-array": "^0.1.7",
+    "validator": "^13.1.1"
   },
   "devDependencies": {
     "node-xlsx": "^0.15.0",

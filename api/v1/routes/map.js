@@ -4,7 +4,8 @@ const axios = require("axios");
 const cache = require("../scripts/cache");
 const Converter = require("../scripts/converter");
 const GeoFilter = require("../scripts/filtering");
-var sortJsonArray = require("sort-json-array");
+const sortJsonArray = require("sort-json-array");
+const validator = require("validator");
 
 router.get("/bicycle-parking", (req, res) => bicycleParking(req, res));
 router.get("/villo-stations", (req, res) => villoStation(req, res));
@@ -20,6 +21,10 @@ router.get("/endpoints", (req, res) => getMapEndpoints(req, res));
 async function bicycleParking(req, res) {
   let key = "bicycle_parking";
   let osmfilter = "node[amenity=bicycle_parking]";
+
+  if (!validate(req)) {
+    return res.status(400).json({ error: "query not valid" });
+  }
 
   let icon = {
     iconUrl: "/bicycle_parking.png",
@@ -37,7 +42,7 @@ async function bicycleParking(req, res) {
       return res.status(500).json({ error: "internal server error" });
     }
 
-    var data = (new Converter(json.data)).osmToGeoJson();
+    var data = new Converter(json.data).osmToGeoJson();
     data.icon = icon;
 
     cache.add(key, data); //TODO add timeout?
@@ -56,6 +61,10 @@ async function bicycleParking(req, res) {
 
 async function villoStation(req, res) {
   let key = "villo_station";
+
+  if (!validate(req)) {
+    return res.status(400).json({ error: "query not valid" });
+  }
 
   let icon = {
     iconUrl: "/villo_station.png",
@@ -76,7 +85,7 @@ async function villoStation(req, res) {
       return res.status(500).json({ error: "internal server error" });
     }
 
-    var data = (new Converter(json.data)).villoToGeoJson();
+    var data = new Converter(json.data).villoToGeoJson();
     data.icon = icon;
 
     cache.add(key, data); //TODO add timeout?
@@ -98,6 +107,10 @@ async function airPump(req, res) {
   let key = "compressed_air";
   let osmfilter = "node[amenity=compressed_air]";
 
+  if (!validate(req)) {
+    return res.status(400).json({ error: "query not valid" });
+  }
+
   let icon = {
     iconUrl: "/compressed_air.png",
     iconSize: [25, 25],
@@ -114,7 +127,7 @@ async function airPump(req, res) {
       return res.status(500).json({ error: "internal server error" });
     }
 
-    var data = (new Converter(json.data)).osmToGeoJson();
+    var data = new Converter(json.data).osmToGeoJson();
     data.icon = icon;
 
     cache.add(key, data); //TODO add timeout?
@@ -134,6 +147,10 @@ async function bicycleRepairStation(req, res) {
   let key = "bicycle_repair_station";
   let osmfilter = "node[amenity=bicycle_repair_station]";
 
+  if (!validate(req)) {
+    return res.status(400).json({ error: "query not valid" });
+  }
+
   let icon = {
     iconUrl: "/bicycle_repair_station.png",
     iconSize: [25, 25],
@@ -150,7 +167,7 @@ async function bicycleRepairStation(req, res) {
       return res.status(500).json({ error: "internal server error" });
     }
 
-    var data = (new Converter(json.data)).osmToGeoJson();
+    var data = new Converter(json.data).osmToGeoJson();
     data.icon = icon;
 
     cache.add(key, data); //TODO add timeout?
@@ -171,6 +188,10 @@ async function bicycleShop(req, res) {
   let key = "bicycle_shop";
   let osmfilter = "node[shop=bicycle]";
 
+  if (!validate(req)) {
+    return res.status(400).json({ error: "query not valid" });
+  }
+
   let icon = {
     iconUrl: "/bicycle_shop.png",
     iconSize: [25, 25],
@@ -187,7 +208,7 @@ async function bicycleShop(req, res) {
       return res.status(500).json({ error: "internal server error" });
     }
 
-    var data = (new Converter(json.data)).osmToGeoJson();
+    var data = new Converter(json.data).osmToGeoJson();
     data.icon = icon;
 
     cache.add(key, data); //TODO add timeout?
@@ -208,6 +229,10 @@ async function drinkingWater(req, res) {
   let key = "drinking_water";
   let osmfilter = "node[amenity=drinking_water]";
 
+  if (!validate(req)) {
+    return res.status(400).json({ error: "query not valid" });
+  }
+
   let icon = {
     iconUrl: "/drinking_water.png",
     iconSize: [25, 25],
@@ -224,7 +249,7 @@ async function drinkingWater(req, res) {
       return res.status(500).json({ error: "internal server error" });
     }
 
-    var data = (new Converter(json.data)).osmToGeoJson();
+    var data = new Converter(json.data).osmToGeoJson();
     data.icon = icon;
 
     cache.add(key, data); //TODO add timeout?
@@ -274,5 +299,22 @@ function osmUrl(filter) {
   let url = `https://overpass-api.de/api/interpreter?data=[out:json][timeout:25]${bbox};(${filter};);out body;>;out skel qt;`;
   return url;
 }
+
+function validate(req) {
+  if (
+    !validator.isEmpty(req.query.lat) &&
+    validator.isDecimal(req.query.lat) &&
+    !validator.isEmpty(req.query.lng) &&
+    validator.isDecimal(req.query.lng) &&
+    !validator.isEmpty(req.query.radius) &&
+    !validator.isEmpty(req.query.max_answers)
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function internalServerError(res, err) {}
 
 module.exports = router;
