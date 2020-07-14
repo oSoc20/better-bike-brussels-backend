@@ -28,24 +28,30 @@ async function bicycleParking(req, res) {
   };
 
   if (cache.get(key)) {
-    return res.status(200).json(cache.get(key));
+    var data = cache.get(key);
+  } else {
+    try {
+      var json = await fetch(osmUrl(osmfilter));
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: "internal server error" });
+    }
+
+    var data = (new Converter(json.data)).osmToGeoJson();
+    data.icon = icon;
+
+    cache.add(key, data); //TODO add timeout?
   }
 
-  try {
-    var json = await fetch(osmUrl(osmfilter));
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: "internal server error" });
-  }
+  let filtered_data = mapfilter(
+    data,
+    req.query.lat,
+    req.query.lng,
+    req.query.radius,
+    req.query.max_answers
+  );
 
-  let converter = new Converter(json.data);
-  let data = converter.osmToGeoJson();
-
-  data.icon = icon;
-
-  cache.add(key, data); //TODO add timeout?
-
-  return res.status(200).json(data);
+  return res.status(200).json(filtered_data);
 }
 
 async function villoStation(req, res) {
@@ -99,24 +105,29 @@ async function airPump(req, res) {
   };
 
   if (cache.get(key)) {
-    return res.status(200).json(cache.get(key));
+    var data = cache.get(key);
+  } else {
+    try {
+      var json = await fetch(osmUrl(osmfilter));
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: "internal server error" });
+    }
+
+    var data = (new Converter(json.data)).osmToGeoJson();
+    data.icon = icon;
+
+    cache.add(key, data); //TODO add timeout?
   }
+  let filtered_data = mapfilter(
+    data,
+    req.query.lat,
+    req.query.lng,
+    req.query.radius,
+    req.query.max_answers
+  );
 
-  try {
-    var json = await fetch(osmUrl(osmfilter));
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: "internal server error" });
-  }
-
-  let converter = new Converter(json.data);
-  let data = converter.osmToGeoJson();
-
-  data.icon = icon;
-
-  cache.add(key, data); //TODO add timeout?
-
-  return res.status(200).json(data);
+  return res.status(200).json(filtered_data);
 }
 
 async function bicycleRepairStation(req, res) {
@@ -130,24 +141,30 @@ async function bicycleRepairStation(req, res) {
   };
 
   if (cache.get(key)) {
-    return res.status(200).json(cache.get(key));
+    var data = cache.get(key);
+  } else {
+    try {
+      var json = await fetch(osmUrl(osmfilter));
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: "internal server error" });
+    }
+
+    var data = (new Converter(json.data)).osmToGeoJson();
+    data.icon = icon;
+
+    cache.add(key, data); //TODO add timeout?
   }
 
-  try {
-    var json = await fetch(osmUrl(osmfilter));
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: "internal server error" });
-  }
+  let filtered_data = mapfilter(
+    data,
+    req.query.lat,
+    req.query.lng,
+    req.query.radius,
+    req.query.max_answers
+  );
 
-  let converter = new Converter(json.data);
-  let data = converter.osmToGeoJson();
-
-  data.icon = icon;
-
-  cache.add(key, data); //TODO add timeout?
-
-  return res.status(200).json(data);
+  return res.status(200).json(filtered_data);
 }
 
 async function bicycleShop(req, res) {
@@ -161,24 +178,30 @@ async function bicycleShop(req, res) {
   };
 
   if (cache.get(key)) {
-    return res.status(200).json(cache.get(key));
+    var data = cache.get(key);
+  } else {
+    try {
+      var json = await fetch(osmUrl(osmfilter));
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: "internal server error" });
+    }
+
+    var data = (new Converter(json.data)).osmToGeoJson();
+    data.icon = icon;
+
+    cache.add(key, data); //TODO add timeout?
   }
 
-  try {
-    var json = await fetch(osmUrl(osmfilter));
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: "internal server error" });
-  }
+  let filtered_data = mapfilter(
+    data,
+    req.query.lat,
+    req.query.lng,
+    req.query.radius,
+    req.query.max_answers
+  );
 
-  let converter = new Converter(json.data);
-  let data = converter.osmToGeoJson();
-
-  data.icon = icon;
-
-  cache.add(key, data); //TODO add timeout?
-
-  return res.status(200).json(data);
+  return res.status(200).json(filtered_data);
 }
 
 async function drinkingWater(req, res) {
@@ -192,24 +215,30 @@ async function drinkingWater(req, res) {
   };
 
   if (cache.get(key)) {
-    return res.status(200).json(cache.get(key));
+    var data = cache.get(key);
+  } else {
+    try {
+      var json = await fetch(osmUrl(osmfilter));
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: "internal server error" });
+    }
+
+    var data = (new Converter(json.data)).osmToGeoJson();
+    data.icon = icon;
+
+    cache.add(key, data); //TODO add timeout?
   }
 
-  try {
-    var json = await fetch(osmUrl(osmfilter));
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: "internal server error" });
-  }
+  let filtered_data = mapfilter(
+    data,
+    req.query.lat,
+    req.query.lng,
+    req.query.radius,
+    req.query.max_answers
+  );
 
-  let converter = new Converter(json.data);
-  let data = converter.osmToGeoJson();
-
-  data.icon = icon;
-
-  cache.add(key, data); //TODO add timeout?
-
-  return res.status(200).json(data);
+  return res.status(200).json(filtered_data);
 }
 
 async function getMapEndpoints(req, res) {
