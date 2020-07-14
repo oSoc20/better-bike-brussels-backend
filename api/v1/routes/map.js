@@ -23,9 +23,9 @@ async function bicycleParking(req, res) {
 
   let icon = {
     iconUrl: "/bicycle_parking.png",
-    iconSize: [25,25],
-    iconAnchor: [12.5,12.5],
-  }
+    iconSize: [25, 25],
+    iconAnchor: [12.5, 12.5],
+  };
 
   if (cache.get(key)) {
     return res.status(200).json(cache.get(key));
@@ -51,85 +51,39 @@ async function bicycleParking(req, res) {
 async function villoStation(req, res) {
   let key = "villo_station";
 
-  console.log(
-    req.query.lat +
-      " " +
-      req.query.lng +
-      " " +
-      req.query.radius +
-      " " +
-      req.query.max_answers
-  );
-
   let icon = {
     iconUrl: "/villo_station.png",
-    iconSize: [25,25],
-    iconAnchor: [12.5,12.5],
-  }
+    iconSize: [25, 25],
+    iconAnchor: [12.5, 12.5],
+  };
 
   if (cache.get(key)) {
-    let data = cache.get(key);
+    var data = cache.get(key);
+  } else {
+    let url =
+      "https://api.jcdecaux.com/vls/v1/stations?apiKey=6d5071ed0d0b3b68462ad73df43fd9e5479b03d6&contract=Bruxelles-Capitale";
 
-    let filter = new GeoFilter(data);
-
-    let filtered_data = filter.filter(
-      req.query.lat,
-      req.query.lng,
-      req.query.radius, //radius
-      req.query.max_answers
-    );
-
-    filtered_data.features = sortJsonArray(
-      filtered_data.features,
-      "radians",
-      "asc"
-    );
-
-    if(filtered_data.features.length > req.query.max_answers){
-      filtered_data.features.length = req.query.max_answers;
+    try {
+      var json = await fetch(url);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: "internal server error" });
     }
 
-    return res.status(200).json(filtered_data);
+    var data = (new Converter(json.data)).villoToGeoJson();
+    data.icon = icon;
+
+    cache.add(key, data); //TODO add timeout?
   }
-
-  let url =
-    "https://api.jcdecaux.com/vls/v1/stations?apiKey=6d5071ed0d0b3b68462ad73df43fd9e5479b03d6&contract=Bruxelles-Capitale";
-
-  try {
-    var json = await fetch(url);
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: "internal server error" });
-  }
-
-  let converter = new Converter(json.data);
-  let data = converter.villoToGeoJson();
-
-  //cache.add(key, data); //TODO add timeout?
 
   // Filter relevant data
-  data.icon = icon;
-
-  cache.add(key, data); //TODO add timeout?
-
-  let filter = new GeoFilter(data);
-
-  let filtered_data = filter.filter(
+  let filtered_data = mapfilter(
+    data,
     req.query.lat,
     req.query.lng,
-    req.query.radius, //radius
+    req.query.radius,
     req.query.max_answers
   );
-
-  filtered_data.features = sortJsonArray(
-    filtered_data.features,
-    "radians",
-    "asc"
-  );
-    if(filtered_data.features.length > req.query.max_answers){
-      filtered_data.features.length = req.query.max_answers;
-    }
-
 
   return res.status(200).json(filtered_data);
 }
@@ -140,9 +94,9 @@ async function airPump(req, res) {
 
   let icon = {
     iconUrl: "/compressed_air.png",
-    iconSize: [25,25],
-    iconAnchor: [12.5,12.5],
-  }
+    iconSize: [25, 25],
+    iconAnchor: [12.5, 12.5],
+  };
 
   if (cache.get(key)) {
     return res.status(200).json(cache.get(key));
@@ -171,9 +125,9 @@ async function bicycleRepairStation(req, res) {
 
   let icon = {
     iconUrl: "/bicycle_repair_station.png",
-    iconSize: [25,25],
-    iconAnchor: [12.5,12.5],
-  }
+    iconSize: [25, 25],
+    iconAnchor: [12.5, 12.5],
+  };
 
   if (cache.get(key)) {
     return res.status(200).json(cache.get(key));
@@ -202,9 +156,9 @@ async function bicycleShop(req, res) {
 
   let icon = {
     iconUrl: "/bicycle_shop.png",
-    iconSize: [25,25],
-    iconAnchor: [12.5,12.5],
-  }
+    iconSize: [25, 25],
+    iconAnchor: [12.5, 12.5],
+  };
 
   if (cache.get(key)) {
     return res.status(200).json(cache.get(key));
@@ -233,9 +187,9 @@ async function drinkingWater(req, res) {
 
   let icon = {
     iconUrl: "/drinking_water.png",
-    iconSize: [25,25],
-    iconAnchor: [12.5,12.5],
-  }
+    iconSize: [25, 25],
+    iconAnchor: [12.5, 12.5],
+  };
 
   if (cache.get(key)) {
     return res.status(200).json(cache.get(key));
@@ -263,6 +217,23 @@ async function getMapEndpoints(req, res) {
   res
     .status(200)
     .json({ success: endpoints.filter((e) => e !== "/api/v1/map/endpoints") });
+}
+
+function mapfilter(data, lat, lng, radius, max_answers) {
+  let filter = new GeoFilter(data);
+
+  let filtered_data = filter.filter(lat, lng, radius, max_answers);
+
+  filtered_data.features = sortJsonArray(
+    filtered_data.features,
+    "radians",
+    "asc"
+  );
+  if (filtered_data.features.length > max_answers) {
+    filtered_data.features.length = max_answers;
+  }
+
+  return filtered_data;
 }
 
 function fetch(url) {
