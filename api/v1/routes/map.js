@@ -13,7 +13,6 @@ router.get("/bicycle-repair-station", (req, res) =>
   bicycleRepairStation(req, res)
 );
 router.get("/bicycle-shop", (req, res) => bicycleShop(req, res));
-router.get("/bicycle-rental", (req, res) => bicycleRental(req, res));
 router.get("/drinking-water", (req, res) => drinkingWater(req, res));
 
 router.get("/endpoints", (req, res) => getMapEndpoints(req, res));
@@ -21,6 +20,12 @@ router.get("/endpoints", (req, res) => getMapEndpoints(req, res));
 async function bicycleParking(req, res) {
   let key = "bicycle_parking";
   let osmfilter = "node[amenity=bicycle_parking]";
+
+  let icon = {
+    iconUrl: "/bicycle_parking.png",
+    iconSize: [25,25],
+    iconAnchor: [12.5,12.5],
+  }
 
   if (cache.get(key)) {
     return res.status(200).json(cache.get(key));
@@ -35,6 +40,8 @@ async function bicycleParking(req, res) {
 
   let converter = new Converter(json.data);
   let data = converter.osmToGeoJson();
+
+  data.icon = icon;
 
   cache.add(key, data); //TODO add timeout?
 
@@ -54,8 +61,14 @@ async function villoStation(req, res) {
       req.query.max_answers
   );
 
+  let icon = {
+    iconUrl: "/villo_station.png",
+    iconSize: [25,25],
+    iconAnchor: [12.5,12.5],
+  }
+
   if (cache.get(key)) {
-    let data = res.status(200).json(cache.get(key));
+    let data = cache.get(key);
 
     let filter = new GeoFilter(data);
 
@@ -65,13 +78,13 @@ async function villoStation(req, res) {
       req.query.radius, //radius
       req.query.max_answers
     );
-  
+
     filtered_data.features = sortJsonArray(
       filtered_data.features,
       "radians",
       "asc"
     );
-  
+
     if(filtered_data.features.length > req.query.max_answers){
       filtered_data.features.length = req.query.max_answers;
     }
@@ -95,6 +108,9 @@ async function villoStation(req, res) {
   //cache.add(key, data); //TODO add timeout?
 
   // Filter relevant data
+  data.icon = icon;
+
+  cache.add(key, data); //TODO add timeout?
 
   let filter = new GeoFilter(data);
 
@@ -113,30 +129,20 @@ async function villoStation(req, res) {
     if(filtered_data.features.length > req.query.max_answers){
       filtered_data.features.length = req.query.max_answers;
     }
-  
+
 
   return res.status(200).json(filtered_data);
 }
 
 async function airPump(req, res) {
-  res.status(501).json({ error: "not implemented" });
-}
+  let key = "compressed_air";
+  let osmfilter = "node[amenity=compressed_air]";
 
-async function bicycleRepairStation(req, res) {
-  res.status(501).json({ error: "not implemented" });
-}
-
-async function bicycleShop(req, res) {
-  res.status(501).json({ error: "not implemented" });
-}
-
-async function bicycleRental(req, res) {
-  res.status(501).json({ error: "not implemented" });
-}
-
-async function drinkingWater(req, res) {
-  let key = "drinking_water";
-  let osmfilter = "node[amenity=drinking_water]";
+  let icon = {
+    iconUrl: "/compressed_air.png",
+    iconSize: [25,25],
+    iconAnchor: [12.5,12.5],
+  }
 
   if (cache.get(key)) {
     return res.status(200).json(cache.get(key));
@@ -151,6 +157,101 @@ async function drinkingWater(req, res) {
 
   let converter = new Converter(json.data);
   let data = converter.osmToGeoJson();
+
+  data.icon = icon;
+
+  cache.add(key, data); //TODO add timeout?
+
+  return res.status(200).json(data);
+}
+
+async function bicycleRepairStation(req, res) {
+  let key = "bicycle_repair_station";
+  let osmfilter = "node[amenity=bicycle_repair_station]";
+
+  let icon = {
+    iconUrl: "/bicycle_repair_station.png",
+    iconSize: [25,25],
+    iconAnchor: [12.5,12.5],
+  }
+
+  if (cache.get(key)) {
+    return res.status(200).json(cache.get(key));
+  }
+
+  try {
+    var json = await fetch(osmUrl(osmfilter));
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "internal server error" });
+  }
+
+  let converter = new Converter(json.data);
+  let data = converter.osmToGeoJson();
+
+  data.icon = icon;
+
+  cache.add(key, data); //TODO add timeout?
+
+  return res.status(200).json(data);
+}
+
+async function bicycleShop(req, res) {
+  let key = "bicycle_shop";
+  let osmfilter = "node[shop=bicycle]";
+
+  let icon = {
+    iconUrl: "/bicycle_shop.png",
+    iconSize: [25,25],
+    iconAnchor: [12.5,12.5],
+  }
+
+  if (cache.get(key)) {
+    return res.status(200).json(cache.get(key));
+  }
+
+  try {
+    var json = await fetch(osmUrl(osmfilter));
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "internal server error" });
+  }
+
+  let converter = new Converter(json.data);
+  let data = converter.osmToGeoJson();
+
+  data.icon = icon;
+
+  cache.add(key, data); //TODO add timeout?
+
+  return res.status(200).json(data);
+}
+
+async function drinkingWater(req, res) {
+  let key = "drinking_water";
+  let osmfilter = "node[amenity=drinking_water]";
+
+  let icon = {
+    iconUrl: "/drinking_water.png",
+    iconSize: [25,25],
+    iconAnchor: [12.5,12.5],
+  }
+
+  if (cache.get(key)) {
+    return res.status(200).json(cache.get(key));
+  }
+
+  try {
+    var json = await fetch(osmUrl(osmfilter));
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "internal server error" });
+  }
+
+  let converter = new Converter(json.data);
+  let data = converter.osmToGeoJson();
+
+  data.icon = icon;
 
   cache.add(key, data); //TODO add timeout?
 
