@@ -26,12 +26,6 @@ async function bicycleParking(req, res) {
     return res.status(400).json({ error: "query not valid" });
   }
 
-  let icon = {
-    iconUrl: "/bicycle_parking.png",
-    iconSize: [25, 25],
-    iconAnchor: [12.5, 12.5],
-  };
-
   if (cache.get(key)) {
     var data = cache.get(key);
   } else {
@@ -43,7 +37,6 @@ async function bicycleParking(req, res) {
     }
 
     var data = new Converter(json.data).osmToGeoJson();
-    data.icon = icon;
 
     cache.add(key, data); //TODO add timeout?
   }
@@ -56,6 +49,8 @@ async function bicycleParking(req, res) {
     req.query.max_answers
   );
 
+  filtered_data.icon = "bicycle_parking.svg";
+
   return res.status(200).json(filtered_data);
 }
 
@@ -65,12 +60,6 @@ async function villoStation(req, res) {
   if (!validate(req)) {
     return res.status(400).json({ error: "query not valid" });
   }
-
-  let icon = {
-    iconUrl: "/villo_station.png",
-    iconSize: [25, 25],
-    iconAnchor: [12.5, 12.5],
-  };
 
   if (cache.get(key)) {
     var data = cache.get(key);
@@ -86,7 +75,6 @@ async function villoStation(req, res) {
     }
 
     var data = new Converter(json.data).villoToGeoJson();
-    data.icon = icon;
 
     cache.add(key, data); //TODO add timeout?
   }
@@ -100,6 +88,8 @@ async function villoStation(req, res) {
     req.query.max_answers
   );
 
+  filtered_data.icon = "villo_station.svg";
+
   return res.status(200).json(filtered_data);
 }
 
@@ -110,12 +100,6 @@ async function airPump(req, res) {
   if (!validate(req)) {
     return res.status(400).json({ error: "query not valid" });
   }
-
-  let icon = {
-    iconUrl: "/compressed_air.png",
-    iconSize: [25, 25],
-    iconAnchor: [12.5, 12.5],
-  };
 
   if (cache.get(key)) {
     var data = cache.get(key);
@@ -128,8 +112,6 @@ async function airPump(req, res) {
     }
 
     var data = new Converter(json.data).osmToGeoJson();
-    data.icon = icon;
-
     cache.add(key, data); //TODO add timeout?
   }
   let filtered_data = mapfilter(
@@ -139,6 +121,8 @@ async function airPump(req, res) {
     req.query.radius,
     req.query.max_answers
   );
+
+  filtered_data.icon = "compressed_air.svg"
 
   return res.status(200).json(filtered_data);
 }
@@ -151,12 +135,6 @@ async function bicycleRepairStation(req, res) {
     return res.status(400).json({ error: "query not valid" });
   }
 
-  let icon = {
-    iconUrl: "/bicycle_repair_station.png",
-    iconSize: [25, 25],
-    iconAnchor: [12.5, 12.5],
-  };
-
   if (cache.get(key)) {
     var data = cache.get(key);
   } else {
@@ -168,7 +146,6 @@ async function bicycleRepairStation(req, res) {
     }
 
     var data = new Converter(json.data).osmToGeoJson();
-    data.icon = icon;
 
     cache.add(key, data); //TODO add timeout?
   }
@@ -180,6 +157,8 @@ async function bicycleRepairStation(req, res) {
     req.query.radius,
     req.query.max_answers
   );
+
+  filtered_data.icon = "bicycle_repair_station.svg"
 
   return res.status(200).json(filtered_data);
 }
@@ -192,12 +171,6 @@ async function bicycleShop(req, res) {
     return res.status(400).json({ error: "query not valid" });
   }
 
-  let icon = {
-    iconUrl: "/bicycle_shop.png",
-    iconSize: [25, 25],
-    iconAnchor: [12.5, 12.5],
-  };
-
   if (cache.get(key)) {
     var data = cache.get(key);
   } else {
@@ -209,7 +182,6 @@ async function bicycleShop(req, res) {
     }
 
     var data = new Converter(json.data).osmToGeoJson();
-    data.icon = icon;
 
     cache.add(key, data); //TODO add timeout?
   }
@@ -221,6 +193,8 @@ async function bicycleShop(req, res) {
     req.query.radius,
     req.query.max_answers
   );
+
+  filtered_data.icon =  "bicycle_shop.svg";
 
   return res.status(200).json(filtered_data);
 }
@@ -233,12 +207,6 @@ async function drinkingWater(req, res) {
     return res.status(400).json({ error: "query not valid" });
   }
 
-  let icon = {
-    iconUrl: "/drinking_water.png",
-    iconSize: [25, 25],
-    iconAnchor: [12.5, 12.5],
-  };
-
   if (cache.get(key)) {
     var data = cache.get(key);
   } else {
@@ -250,7 +218,6 @@ async function drinkingWater(req, res) {
     }
 
     var data = new Converter(json.data).osmToGeoJson();
-    data.icon = icon;
 
     cache.add(key, data); //TODO add timeout?
   }
@@ -262,6 +229,8 @@ async function drinkingWater(req, res) {
     req.query.radius,
     req.query.max_answers
   );
+
+  filtered_data.icon = "drinking_water.svg";
 
   return res.status(200).json(filtered_data);
 }
@@ -295,17 +264,17 @@ function fetch(url) {
 }
 
 function osmUrl(filter) {
-  let bbox = "[bbox:50.685,4.234,50.975,4.481]"; //TODO what are we going to do with this???????
+  let bbox = "[bbox:50.7599,4.2617,50.9238,4.4986]"; //TODO what are we going to do with this???????
   let url = `https://overpass-api.de/api/interpreter?data=[out:json][timeout:25]${bbox};(${filter};);out body;>;out skel qt;`;
   return url;
 }
 
 function validate(req) {
   if (
-    req.query.lat&&
-    req.query.lng&&
-    req.query.radius&&
-    req.query.max_answers&&
+    req.query.lat &&
+    req.query.lng &&
+    req.query.radius &&
+    req.query.max_answers &&
     !validator.isEmpty(req.query.lat) &&
     validator.isDecimal(req.query.lat) &&
     !validator.isEmpty(req.query.lng) &&
