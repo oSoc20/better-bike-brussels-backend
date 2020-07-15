@@ -56,3 +56,17 @@ For example, a filtered request could be:
 ```
 https://HOST:PORT/api/v1/map/villo-stations?lat=4.41505&lng=50.836304&radius=100&max_answers=10
 ```
+
+### Current Location
+
+To receive the current street name, send a request using `current-street` endpoint:
+
+```
+https://HOST:PORT/api/v1/map/current-street
+```
+
+as query parameter, you will need to add the lat & lng parameters to send over your current location. f.e.:
+
+```
+https://HOST:PORT/api/v1/map/current-street?lat=50.84889&lng=4.34930
+```
