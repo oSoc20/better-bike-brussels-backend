@@ -26,11 +26,14 @@
     "express": "^4.17.1",
     "geo-distance": "^0.2.0",
     "geojson": "^0.5.0",
+    "json-query": "^2.2.2",
     "memory-cache": "^0.2.0",
     "mysql2": "^2.1.0",
     "osmtogeojson": "^3.0.0-beta.4",
     "qs": "^6.9.4",
-    "sequelize": "^6.3.1"
+    "sequelize": "^6.3.1",
+    "sort-json-array": "^0.1.7",
+    "validator": "^13.1.1"
   },
   "devDependencies": {
     "node-xlsx": "^0.15.0",
