@@ -17,6 +17,7 @@ router.get("/bicycle-shop", (req, res) => bicycleShop(req, res));
 router.get("/drinking-water", (req, res) => drinkingWater(req, res));
 
 router.get("/endpoints", (req, res) => getMapEndpoints(req, res));
+router.get("/current-street", (req, res) => reverseGeocode(req, res));
 
 async function bicycleParking(req, res) {
   let key = "bicycle_parking";
@@ -122,7 +123,7 @@ async function airPump(req, res) {
     req.query.max_answers
   );
 
-  filtered_data.icon = "compressed_air.svg"
+  filtered_data.icon = "compressed_air.svg";
 
   return res.status(200).json(filtered_data);
 }
@@ -158,7 +159,7 @@ async function bicycleRepairStation(req, res) {
     req.query.max_answers
   );
 
-  filtered_data.icon = "bicycle_repair_station.svg"
+  filtered_data.icon = "bicycle_repair_station.svg";
 
   return res.status(200).json(filtered_data);
 }
@@ -194,7 +195,7 @@ async function bicycleShop(req, res) {
     req.query.max_answers
   );
 
-  filtered_data.icon =  "bicycle_shop.svg";
+  filtered_data.icon = "bicycle_shop.svg";
 
   return res.status(200).json(filtered_data);
 }
@@ -242,6 +243,30 @@ async function getMapEndpoints(req, res) {
     .json({ success: endpoints.filter((e) => e !== "/api/v1/map/endpoints") });
 }
 
+async function reverseGeocode(req, res) {
+  if (
+    req.query.lat &&
+    req.query.lng &&
+    !validator.isEmpty(req.query.lat) &&
+    validator.isDecimal(req.query.lat) &&
+    !validator.isEmpty(req.query.lng) &&
+    validator.isDecimal(req.query.lng)
+  ) {
+    try {
+      var data = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${req.query.lat}&lon=${req.query.lng}&format=json`);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: "internal server error" });
+    }
+
+    let street = data.data.address.road;
+    let n = street.search(" - ");
+
+    return res.status(200).json({streetname_fr: street.substr(0,n),streetname_nl: street.substr(n+3)});
+  }
+  return res.status(400).json({ error: "query not valid" });
+}
+
 function mapfilter(data, lat, lng, radius, max_answers) {
   let filter = new GeoFilter(data);
 
@@ -287,7 +312,5 @@ function validate(req) {
     return false;
   }
 }
-
-function internalServerError(res, err) {}
 
 module.exports = router;
