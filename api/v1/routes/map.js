@@ -39,6 +39,7 @@ async function bicycleParking(req, res) {
 
     var data = new Converter(json.data).osmToGeoJson();
 
+
     cache.add(key, data); //TODO add timeout?
   }
 
@@ -51,6 +52,7 @@ async function bicycleParking(req, res) {
   );
 
   filtered_data.icon = "bicycle_parking.svg";
+  filtered_data.title = "Bicycle parking";
 
   return res.status(200).json(filtered_data);
 }
@@ -90,6 +92,7 @@ async function villoStation(req, res) {
   );
 
   filtered_data.icon = "villo_station.svg";
+  filtered_data.title = "Villo station";
 
   return res.status(200).json(filtered_data);
 }
@@ -124,6 +127,7 @@ async function airPump(req, res) {
   );
 
   filtered_data.icon = "compressed_air.svg";
+  filtered_data.title = "Air pump";
 
   return res.status(200).json(filtered_data);
 }
@@ -147,6 +151,7 @@ async function bicycleRepairStation(req, res) {
     }
 
     var data = new Converter(json.data).osmToGeoJson();
+    
 
     cache.add(key, data); //TODO add timeout?
   }
@@ -160,6 +165,7 @@ async function bicycleRepairStation(req, res) {
   );
 
   filtered_data.icon = "bicycle_repair_station.svg";
+  filtered_data.title = "Repair station";
 
   return res.status(200).json(filtered_data);
 }
@@ -196,6 +202,7 @@ async function bicycleShop(req, res) {
   );
 
   filtered_data.icon = "bicycle_shop.svg";
+  filtered_data.title = "Bicycle shop";
 
   return res.status(200).json(filtered_data);
 }
@@ -232,6 +239,7 @@ async function drinkingWater(req, res) {
   );
 
   filtered_data.icon = "drinking_water.svg";
+  filtered_data.title = "Water tap";
 
   return res.status(200).json(filtered_data);
 }
