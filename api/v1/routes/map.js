@@ -240,7 +240,7 @@ async function getMapEndpoints(req, res) {
   let endpoints = router.stack.map((x) => "/api/v1/map" + x.route.path);
   res
     .status(200)
-    .json({ success: endpoints.filter((e) => e !== "/api/v1/map/endpoints") });
+    .json({ success: endpoints.filter((e) => e !== "/api/v1/map/endpoints" && e !== "/api/v1/map/current-street") });
 }
 
 async function reverseGeocode(req, res) {
@@ -258,10 +258,10 @@ async function reverseGeocode(req, res) {
       console.log(err);
       return res.status(500).json({ error: "internal server error" });
     }
-
+    console.log(data.data.address);
     let street = data.data.address.road;
     let n = street.search(" - ");
-
+    
     return res.status(200).json({streetname_fr: street.substr(0,n),streetname_nl: street.substr(n+3)});
   }
   return res.status(400).json({ error: "query not valid" });
