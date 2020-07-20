@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const axios = require("axios");
 const cache = require("../scripts/cache");
 const Converter = require("../scripts/converter");
 const GeoFilter = require("../scripts/filtering");
@@ -18,6 +17,8 @@ router.get("/drinking-water", (req, res) => drinkingWater(req, res));
 
 router.get("/endpoints", (req, res) => getMapEndpoints(req, res));
 router.get("/current-street", (req, res) => reverseGeocode(req, res));
+
+
 
 async function bicycleParking(req, res) {
   let key = "bicycle_parking";
@@ -44,11 +45,11 @@ async function bicycleParking(req, res) {
   }
 
   let filtered_data = mapfilter(
-    data,
-    req.query.lat,
-    req.query.lng,
-    req.query.radius,
-    req.query.max_answers
+      data,
+      req.query.lat,
+      req.query.lng,
+      req.query.radius,
+      req.query.max_answers
   );
 
   filtered_data.icon = "bicycle_parking.svg";
@@ -56,6 +57,7 @@ async function bicycleParking(req, res) {
 
   return res.status(200).json(filtered_data);
 }
+
 
 async function villoStation(req, res) {
   let key = "villo_station";
@@ -292,15 +294,7 @@ function mapfilter(data, lat, lng, radius, max_answers) {
   return filtered_data;
 }
 
-function fetch(url) {
-  return axios.get(url);
-}
 
-function osmUrl(filter) {
-  let bbox = "[bbox:50.7599,4.2617,50.9238,4.4986]"; //TODO what are we going to do with this???????
-  let url = `https://overpass-api.de/api/interpreter?data=[out:json][timeout:25]${bbox};(${filter};);out body;>;out skel qt;`;
-  return url;
-}
 
 function validate(req) {
   if (
