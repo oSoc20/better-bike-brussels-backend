@@ -29,7 +29,7 @@ app.use((error, req, res, next) => {
   res.json({ error: error.message });
 });
 
-let port = process.env.PORT || 3000;
+let port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log("app listening on port " + port);
 });
