@@ -44,16 +44,11 @@ async function official_event_by_id(req,res){
  * @param to date in Unix Epoch time
  */
 function filterByDate(events, from, to) {
-  console.log(from + " " + to);
   let filtered_events = events.filter((item) => {
     // if event.data_next is between from and to, then include it
     if (item.date_next) {
       let next_date = new Date(item.date_next);
-
-      console.log(next_date);
       let next_time = next_date.getTime() / 1000;
-
-      console.log(next_time);
       return from < next_time && next_time < to;
     }
     return false;
