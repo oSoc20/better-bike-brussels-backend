@@ -77,6 +77,7 @@ module.exports = {
                 });
             }
         });
+        
         return all_events;
     },
 
@@ -87,7 +88,7 @@ module.exports = {
     },
 
     osmUrl(filter) {
-        let bbox = "[bbox:50.7599,4.2617,50.9238,4.4986]"; //TODO what are we going to do with this???????
+        let bbox = "[bbox:50.7599,4.2617,50.9238,4.4986]";
         let url = `https://overpass-api.de/api/interpreter?data=[out:json][timeout:25]${bbox};(${filter};);out body;>;out skel qt;`;
         return url;
     }

@@ -64,6 +64,6 @@ async function refreshDrinkingWater() {
 }
 
 async function refreshOfficialEvents() {
-    await cache.put("official_events", await dataFetcher.fetchOfficialEvents(), OFFICIAL_EVENTS_REFRESH, refreshOfficialEvents);
+    cache.put("official_events", await dataFetcher.fetchOfficialEvents(), OFFICIAL_EVENTS_REFRESH, refreshOfficialEvents);
     console.log("done official_events");
 }

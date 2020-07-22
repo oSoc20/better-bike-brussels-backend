@@ -19,8 +19,9 @@ async function official_events(req, res) {
 
   if (cache.get(key)) {
     let all_events = cache.get(key);
-    all_events.events = filterByDate(all_events.events, from, to);
-    return res.status(200).json(all_events);
+
+    //all_events.events = filterByDate(all_events.events, from, to);
+    return res.status(200).json({events : filterByDate(all_events.events, from, to)});
   } else {
     return res.status(500).json({ error: "internal server error" });
   }
