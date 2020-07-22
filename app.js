@@ -37,7 +37,8 @@ app.listen(port, () => {
 });
 
 
-Promise.resolve(cache.init()).then(r =>
-    console.log("Cache init done")
-);
+Promise.resolve(cache.init()).then( r => {
+    console.log("Cache init done");
+  }
+)
 

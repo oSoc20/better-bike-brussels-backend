@@ -1,6 +1,7 @@
 
 const Converter = require("./converter");
 const axios = require("axios");
+const config = require("../../../config");
 
 module.exports = {
 
@@ -46,8 +47,41 @@ module.exports = {
         return new Converter(json.data).osmToGeoJson()
     },
 
+    fetchOfficialEvents: async function() {
+        const urls = [
+            "https://api.brussels:443/api/agenda/0.0.1/events/search?name=fiets",
+            "https://api.brussels:443/api/agenda/0.0.1/events/search?name=v%C3%A9lo",
+            "https://api.brussels:443/api/agenda/0.0.1/events/search?name=cycli",
+        ];
 
-    async fetch_url(url) {
+        let jsons = urls.map(async function (item) {
+            try {
+                let json = await fetch_events(item);
+                return json.data;
+            } catch (err) {
+                console.log(err);
+                return null;
+            }
+        });
+
+        let jsons_nopromise = await Promise.all(jsons);
+
+        let all_events = {
+            events: [],
+        };
+
+        jsons_nopromise.forEach((item) => {
+            if (item.response.resultCount > 0) {
+                item.response.results.event.forEach((elem) => {
+                    all_events.events.push(elem);
+                });
+            }
+        });
+        return all_events;
+    },
+
+
+    fetch_url: async function(url) {
         let data = await axios.get(url);
         return data
     },
@@ -57,4 +91,20 @@ module.exports = {
         let url = `https://overpass-api.de/api/interpreter?data=[out:json][timeout:25]${bbox};(${filter};);out body;>;out skel qt;`;
         return url;
     }
+}
+
+
+async function fetch_events(url) {
+    const options = {
+        headers: {
+            Authorization: getAPIKey(),
+            Accept: "application/json",
+        },
+    };
+    let data = await axios.get(url, options);
+    return data;
+}
+
+function getAPIKey() {
+    return config.env.APIBRUSSELS_API_KEY;
 }
