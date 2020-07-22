@@ -5,6 +5,7 @@ const Converter = require("../scripts/converter");
 const GeoFilter = require("../scripts/filtering");
 const sortJsonArray = require("sort-json-array");
 const validator = require("validator");
+const { default: Axios } = require("axios");
 
 router.get("/bicycle-parking", (req, res) => bicycleParking(req, res));
 router.get("/villo-stations", (req, res) => villoStation(req, res));
@@ -228,6 +229,10 @@ async function reverseGeocode(req, res) {
   return res.status(400).json({ error: "query not valid" });
 }
 
+function fetch(url){
+  return Axios.get(url);
+}
+
 function mapfilter(data, lat, lng, radius, max_answers) {
   let filter = new GeoFilter(data);
 
@@ -259,7 +264,7 @@ function validate(req) {
     !validator.isEmpty(req.query.radius) &&
     !validator.isEmpty(req.query.max_answers)
   ) {
-    return true;
+    return true;d
   } else {
     return false;
   }
