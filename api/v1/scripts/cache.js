@@ -10,16 +10,13 @@ module.exports = {
 
     init: async function() {
         // Points of interests
-        /*
         await refreshBicycleParking();
-
         await refreshVilloStation();
         await refreshCompressedAir();
         await refreshBicycleRepairStations();
         await refreshBicycleShop();
-
         await refreshDrinkingWater();
-        */
+
         // Events
         await refreshOfficialEvents();
     },
