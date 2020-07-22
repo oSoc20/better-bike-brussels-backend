@@ -15,14 +15,18 @@ https://HOST:PORT/api/v1/map/endpoints
 A JSON file containing a list of the avaiaible data points will be sent back.
 
 For example:
+
 ```json
-{"success":
-["/api/v1/map/bicycle-parking",
-"/api/v1/map/villo-stations",
-"/api/v1/map/air-pump",
-"/api/v1/map/bicycle-repair-station",
-"/api/v1/map/bicycle-shop",
-"/api/v1/map/drinking-water"]}
+{
+  "success": [
+    "/api/v1/map/bicycle-parking",
+    "/api/v1/map/villo-stations",
+    "/api/v1/map/air-pump",
+    "/api/v1/map/bicycle-repair-station",
+    "/api/v1/map/bicycle-shop",
+    "/api/v1/map/drinking-water"
+  ]
+}
 ```
 
 #### Datasets
@@ -35,13 +39,12 @@ https://HOST:PORT/api/v1/map/villo-stations
 
 A GeoJSON file will be sent back, in this case containing all Villo! Stations.
 
-
 #### Filter Datasets
 
 The API supports multiple URL parameters:
 
 | Parameter     | Description                                                                                   |
-|---------------|-----------------------------------------------------------------------------------------------|
+| ------------- | --------------------------------------------------------------------------------------------- |
 | `lat`         | The latitude of the center of the search.                                                     |
 | `lng`         | The longitude of the center of the search.                                                    |
 | `radius`      | The radius of the search.                                                                     |
@@ -83,10 +86,10 @@ Then, create `config.js` in the root directory containing:
 
 ```js
 module.exports = {
-    env: {
-        APIBRUSSELS_API_KEY: 'Bearer YOUR_KEY_ID'
-    }
-}
+  env: {
+    APIBRUSSELS_API_KEY: "Bearer YOUR_KEY_ID",
+  },
+};
 ```
 
 The default port is 8080, but can be changed. We will use PORT in the following section.
@@ -102,14 +105,12 @@ https://HOST:PORT/api/v1/event/official
 You can filter events using URL parameters:
 
 | Parameter | Description                                             |
-|-----------|---------------------------------------------------------|
+| --------- | ------------------------------------------------------- |
 | `from`    | Unix Epoch timestamp from which events should be sent.  |
 | `to`      | Unix Epoch timestamp until which events should be sent. |
 
 For example, a request between January 1st, 2020 and July 31st, 2020 is:
 
-
 ```
 https://HOST:PORT/api/v1/event/official?from=1577836800&to=1596239999
 ```
-

@@ -4,6 +4,8 @@
   "description": "server for the betterbikebrussels application",
   "main": "app.js",
   "scripts": {
+    "prettier": "npx prettier --write . ",
+    "lint": "npx eslint api/** --fix",
     "start": "node .",
     "dev": "nodemon ."
   },
@@ -36,7 +38,12 @@
     "validator": "^13.1.1"
   },
   "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.5.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
     "node-xlsx": "^0.15.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "prettier": "2.0.5"
   }
 }
