@@ -1,8 +1,10 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+const cache = require("./api/v1/scripts/cache")
 
 const apiRoutes = require("./routes/api");
+const dataFetcher = require("./api/v1/scripts/datafetcher");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -33,3 +35,10 @@ let port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log("app listening on port " + port);
 });
+
+
+Promise.resolve(cache.init()).then( r => {
+    console.log("Cache init done");
+  }
+)
+

@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const axios = require("axios");
 const cache = require("../scripts/cache");
 const Converter = require("../scripts/converter");
 const GeoFilter = require("../scripts/filtering");
@@ -19,9 +18,10 @@ router.get("/drinking-water", (req, res) => drinkingWater(req, res));
 router.get("/endpoints", (req, res) => getMapEndpoints(req, res));
 router.get("/current-street", (req, res) => reverseGeocode(req, res));
 
+
+
 async function bicycleParking(req, res) {
   let key = "bicycle_parking";
-  let osmfilter = "node[amenity=bicycle_parking]";
 
   if (!validate(req)) {
     return res.status(400).json({ error: "query not valid" });
@@ -31,7 +31,7 @@ async function bicycleParking(req, res) {
     var data = cache.get(key);
   } else {
     try {
-      var json = await fetch(osmUrl(osmfilter));
+      var json = await fetch_url(osmUrl(osmfilter));
     } catch (err) {
       console.log(err);
       return res.status(500).json({ error: "internal server error" });
@@ -44,11 +44,11 @@ async function bicycleParking(req, res) {
   }
 
   let filtered_data = mapfilter(
-    data,
-    req.query.lat,
-    req.query.lng,
-    req.query.radius,
-    req.query.max_answers
+      data,
+      req.query.lat,
+      req.query.lng,
+      req.query.radius,
+      req.query.max_answers
   );
 
   filtered_data.icon = "bicycle_parking.svg";
@@ -56,6 +56,7 @@ async function bicycleParking(req, res) {
 
   return res.status(200).json(filtered_data);
 }
+
 
 async function villoStation(req, res) {
   let key = "villo_station";
@@ -67,19 +68,7 @@ async function villoStation(req, res) {
   if (cache.get(key)) {
     var data = cache.get(key);
   } else {
-    let url =
-      "https://api.jcdecaux.com/vls/v1/stations?apiKey=6d5071ed0d0b3b68462ad73df43fd9e5479b03d6&contract=Bruxelles-Capitale";
-
-    try {
-      var json = await fetch(url);
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({ error: "internal server error" });
-    }
-
-    var data = new Converter(json.data).villoToGeoJson();
-
-    cache.add(key, data); //TODO add timeout?
+    return res.status(500).json({ error: "internal server error" });
   }
 
   // Filter relevant data
@@ -99,7 +88,6 @@ async function villoStation(req, res) {
 
 async function airPump(req, res) {
   let key = "compressed_air";
-  let osmfilter = "node[amenity=compressed_air]";
 
   if (!validate(req)) {
     return res.status(400).json({ error: "query not valid" });
@@ -108,15 +96,7 @@ async function airPump(req, res) {
   if (cache.get(key)) {
     var data = cache.get(key);
   } else {
-    try {
-      var json = await fetch(osmUrl(osmfilter));
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({ error: "internal server error" });
-    }
-
-    var data = new Converter(json.data).osmToGeoJson();
-    cache.add(key, data); //TODO add timeout?
+    return res.status(500).json({ error: "internal server error" });
   }
   let filtered_data = mapfilter(
     data,
@@ -134,7 +114,6 @@ async function airPump(req, res) {
 
 async function bicycleRepairStation(req, res) {
   let key = "bicycle_repair_station";
-  let osmfilter = "node[amenity=bicycle_repair_station]";
 
   if (!validate(req)) {
     return res.status(400).json({ error: "query not valid" });
@@ -143,17 +122,7 @@ async function bicycleRepairStation(req, res) {
   if (cache.get(key)) {
     var data = cache.get(key);
   } else {
-    try {
-      var json = await fetch(osmUrl(osmfilter));
-    } catch (err) {
-      console.log(err);
       return res.status(500).json({ error: "internal server error" });
-    }
-
-    var data = new Converter(json.data).osmToGeoJson();
-    
-
-    cache.add(key, data); //TODO add timeout?
   }
 
   let filtered_data = mapfilter(
@@ -172,7 +141,6 @@ async function bicycleRepairStation(req, res) {
 
 async function bicycleShop(req, res) {
   let key = "bicycle_shop";
-  let osmfilter = "node[shop=bicycle]";
 
   if (!validate(req)) {
     return res.status(400).json({ error: "query not valid" });
@@ -181,16 +149,7 @@ async function bicycleShop(req, res) {
   if (cache.get(key)) {
     var data = cache.get(key);
   } else {
-    try {
-      var json = await fetch(osmUrl(osmfilter));
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({ error: "internal server error" });
-    }
-
-    var data = new Converter(json.data).osmToGeoJson();
-
-    cache.add(key, data); //TODO add timeout?
+    return res.status(500).json({ error: "internal server error" });
   }
 
   let filtered_data = mapfilter(
@@ -209,7 +168,6 @@ async function bicycleShop(req, res) {
 
 async function drinkingWater(req, res) {
   let key = "drinking_water";
-  let osmfilter = "node[amenity=drinking_water]";
 
   if (!validate(req)) {
     return res.status(400).json({ error: "query not valid" });
@@ -218,16 +176,7 @@ async function drinkingWater(req, res) {
   if (cache.get(key)) {
     var data = cache.get(key);
   } else {
-    try {
-      var json = await fetch(osmUrl(osmfilter));
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({ error: "internal server error" });
-    }
-
-    var data = new Converter(json.data).osmToGeoJson();
-
-    cache.add(key, data); //TODO add timeout?
+    return res.status(500).json({ error: "internal server error" });
   }
 
   let filtered_data = mapfilter(
@@ -292,15 +241,6 @@ function mapfilter(data, lat, lng, radius, max_answers) {
   return filtered_data;
 }
 
-function fetch(url) {
-  return axios.get(url);
-}
-
-function osmUrl(filter) {
-  let bbox = "[bbox:50.7599,4.2617,50.9238,4.4986]"; //TODO what are we going to do with this???????
-  let url = `https://overpass-api.de/api/interpreter?data=[out:json][timeout:25]${bbox};(${filter};);out body;>;out skel qt;`;
-  return url;
-}
 
 function validate(req) {
   if (
