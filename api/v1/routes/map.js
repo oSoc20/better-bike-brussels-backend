@@ -219,6 +219,10 @@ async function reverseGeocode(req, res) {
     let street = data.data.address.road;
     let n = street.search(" - ");
     
+    if(n == -1){
+      return res.status(200).json({streetname_fr: street,streetname_nl: street});
+    }
+
     return res.status(200).json({streetname_fr: street.substr(0,n),streetname_nl: street.substr(n+3)});
   }
   return res.status(400).json({ error: "query not valid" });
