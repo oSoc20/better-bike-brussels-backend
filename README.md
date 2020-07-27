@@ -1,10 +1,73 @@
 # BetterBikeBrusselsBackend
 
+## Deployment
+
+You can use Docker to install BetterBikeBackend. For information about the installation using Docker, please refer to the following sections. 
+
+If you don't want to use Docker, you need to install `nodejs`. The software has been tested with Node.js version 14.
+
+Then, run the app with the following command on the root directory of the source code:
+
+```bash
+node .
+```
+
+### Installation from DockerHub
+
+Pull the lastest availaible container, here `20200727`:
+
+```bash
+docker pull lavendthomas/betterbikebrusselsbackend:20200727
+```
+
+Then, launch the container:
+
+```bash
+docker run --name betterbikebusselsbackend -p 8080:8080 -d <image_id>
+```
+
+You can change the port of the API by changing the second number of the `-p` option. The default is `8080`.
+
+## Build the Docker container from source
+
+First set a `PORT` environment variable for your desired port.
+
+```bash
+export PORT=8080    # choose your port here
+```
+
+Official events are gathered from the [API.brussels](https://api.brussels/store/). You need to create an account, and generate an API key.
+
+Weather information is collected from [OpenWeatherMap](https://openweathermap.org/). You also need to create a free account and generate an API key.
+
+Create `config.js` in the root directory containing:
+
+```js
+module.exports = {
+  env: {
+    APIBRUSSELS_API_KEY: "Bearer YOUR_KEY",
+    OPENWEATHERMAP_API_KEY: 'YOUR_KEY'
+  },
+};
+```
+
+
+Once this is done, you can finally build the docker image:
+
+```bash
+docker build -t <your-id>/betterbikebusselsbackend .
+```
+
+You now have built the container, follow the instructions in the previous sections, without pulling the container from DockerHub.
+
+
+
+
 ## API Documentation
 
 ### Points of interests to show on the map
 
-The default port is 3000, but can be changed in `app.js`. We will use PORT in the following document.
+The default port is 8080, but can be changed in `app.js`. We will use PORT in the following document.
 
 A list of all endpoints, i.e. data sources can be found at:
 
@@ -80,21 +143,9 @@ There are two types of events, official events and user-generated events.
 
 #### Official events
 
-Official events are gathered from the [API.brussels](https://api.brussels/store/). You need to create an account, and generate an API key.
 
-Then, create `config.js` in the root directory containing:
 
-```js
-module.exports = {
-  env: {
-    APIBRUSSELS_API_KEY: "Bearer YOUR_KEY_ID",
-  },
-};
-```
-
-The default port is 8080, but can be changed. We will use PORT in the following section.
-
-Once you're set up, you can request the list of all bike-related events:
+You can request the list of all bike-related events:
 
 ```
 https://HOST:PORT/api/v1/event/official
