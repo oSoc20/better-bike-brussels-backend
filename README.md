@@ -14,6 +14,8 @@ node .
 
 ### Installation from DockerHub
 
+![Docker Image Version (latest by date)](https://img.shields.io/docker/v/lavendthomas/betterbikebrusselsbackend)
+
 Pull the lastest availaible container, here `20200727`:
 
 ```bash
