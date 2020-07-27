@@ -16,7 +16,7 @@ node .
 
 ![Docker Image Version (latest by date)](https://img.shields.io/docker/v/lavendthomas/betterbikebrusselsbackend)
 
-Pull the lastest availaible container, here `20200727`:
+Pull the latest available container, here `20200727`:
 
 ```bash
 docker pull lavendthomas/betterbikebrusselsbackend:20200727
