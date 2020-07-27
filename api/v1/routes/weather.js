@@ -16,7 +16,6 @@ async function current_weather(req, res) {
 		var json = await fetch(
 			`http://api.openweathermap.org/data/2.5/weather?q=Brussels&appid=${config.env.OPENWEATHERMAP_API_KEY}&lang=${req.query.language}&units=metric`
 		);
-		console.log(json.data);
 	} catch (err) {
 		console.log(err);
 		return res.status(500).json({ error: 'internal server error' });
