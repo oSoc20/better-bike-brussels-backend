@@ -30,7 +30,7 @@ docker run --name betterbikebusselsbackend -p 8080:8080 -d <image_id>
 
 You can change the port of the API by changing the second number of the `-p` option. The default is `8080`.
 
-## Build the Docker container from source
+### Build the Docker container from source
 
 First set a `PORT` environment variable for your desired port.
 
