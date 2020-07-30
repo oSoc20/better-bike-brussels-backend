@@ -1,14 +1,44 @@
 # BetterBikeBrusselsBackend
 
+## Frontend
+
+The base code can be found [here](https://github.com/oSoc20/better-bike-brussels)
+
 ## Deployment
 
-You can use Docker to install BetterBikeBackend. For information about the installation using Docker, please refer to the following sections. 
+You can use Docker to install BetterBikeBackend. For information about the installation using Docker, please refer to the following sections.
 
-If you don't want to use Docker, you need to install `nodejs`. The software has been tested with Node.js version 14.
+If you don't want to use Docker, you can run it locally using:
 
-Then, run the app with the following command on the root directory of the source code:
+### Requirements
+
+Please note the following requirements:
+
+* Node.JS (^v14.x.x)
+* npm (^v6.x.x)
+
+### Before anything
+
+Clone the github repository and open a terminal in the repository.
+
+Create a `config.js` file in the root directory containing:
+
+```js
+module.exports = {
+  env: {
+    APIBRUSSELS_API_KEY: "Bearer YOUR_KEY",
+    OPENWEATHERMAP_API_KEY: 'YOUR_KEY'
+  },
+}
+```
+
+## Set up and launch
 
 ```bash
+# Install npm dependencies
+npm install
+
+# Start the service
 node .
 ```
 
